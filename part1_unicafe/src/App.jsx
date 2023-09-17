@@ -47,7 +47,7 @@ const DetailedStatistics = ({total, average, percentage}) => {
 }
 
 
-function App() {
+const App = () => {
   // states
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
