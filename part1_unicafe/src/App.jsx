@@ -49,10 +49,12 @@ const App = () => {
 
   return (
     <>
+      <hr />
       <Header header={"Give Feedback"} />
       <Button choice={() => setGood(good + 1)} name="Good" />
       <Button choice={() => setNeutral(neutral + 1)} name="Neutral" />
       <Button choice={() => setBad(bad + 1)} name="Bad" /> <br />
+      <hr />
       <h3>Statistics</h3>
       <Statistics 
         good={good} 
@@ -61,7 +63,7 @@ const App = () => {
         total={total}
         average={average}
         percentage={percentage}  
-      />
+      /> <hr />
     </>
   )
 }
