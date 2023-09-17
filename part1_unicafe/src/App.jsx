@@ -14,31 +14,20 @@ const Button = ({choice, name}) => {
   )
 }
 // statistic component
-const Statistics = ({good, neutral, bad}) => {
-  return (
-    <>
-    <p>Good: {good} </p>
-    <p>Neutral: {neutral} </p>
-    <p>Bad: {bad} </p>
-    </>
-  )
-}
-const DetailedStatistics = ({total, average, percentage}) => {
-  let condition = "Positive";
+const Statistics = (props) => {
+  const {good, neutral, bad, total, average, percentage} = props;
+  const condition = percentage() < 50 ? "Negative" : "Positive";
   // eslint-disable-next-line use-isnan
-  if (isNaN(average()) || isNaN(percentage())) {
+  if (isNaN(percentage())) {
     return (
-      <>
-        <p> All: {total()} </p>
-        <p> Average: no data has been entered yet  </p>
-        <p> Neutral: no data has been entered yet </p>
-      </>
+      <h4>No feedback has been given!</h4>
     )
-  } else if (percentage() < 50) {
-      condition = "Negative"
   }
   return (
     <>
+      <p>Good: {good} </p>
+      <p>Neutral: {neutral} </p>
+      <p>Bad: {bad} </p>
       <p> All: {total()} </p>
       <p> Average: {average()} </p>
       <p> {condition}: {percentage()} </p>
@@ -65,8 +54,14 @@ const App = () => {
       <Button choice={() => setNeutral(neutral + 1)} name="Neutral" />
       <Button choice={() => setBad(bad + 1)} name="Bad" /> <br />
       <h3>Statistics</h3>
-      <Statistics good={good} neutral={neutral} bad={bad} />
-      <DetailedStatistics total={total} average={average} percentage={percentage} />
+      <Statistics 
+        good={good} 
+        neutral={neutral} 
+        bad={bad}
+        total={total}
+        average={average}
+        percentage={percentage}  
+      />
     </>
   )
 }
