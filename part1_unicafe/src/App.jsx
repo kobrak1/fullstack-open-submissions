@@ -29,8 +29,8 @@ const Statistics = (props) => {
       <p>Neutral: {neutral} </p>
       <p>Bad: {bad} </p>
       <p> All: {total()} </p>
-      <p> Average: {average()} </p>
-      <p> {condition}: {percentage()} </p>
+      <p> Average: {average().toFixed(2)} </p>
+      <p> {condition}: {percentage().toFixed(2)}% </p>
     </>
   )
 }
