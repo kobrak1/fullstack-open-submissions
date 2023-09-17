@@ -7,9 +7,13 @@ const Button = ({func, name}) => {
   )
 }
 
-const Anecdote = ({anecdote}) => {
+const Anecdote = ({anecdote, vote}) => {
   return (
-    <div> {anecdote} </div>
+    <>
+      <div> {anecdote} </div>
+      <div> Has {vote} votes. </div>
+    </>
+    
   )
 }
 
@@ -24,15 +28,26 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
-  const [selected, setSelected] = useState(0)
-  const randomIndex = () => setSelected(Math.floor(Math.random() * anecdotes.length))
-  console.log(selected)
+  const initialVotes = new Array(anecdotes.length).fill(0); // Her bir söz için başlangıçta 0 oy
 
+  // hooks 
+  const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(initialVotes);
+
+  // functions
+  const randomIndex = () => setSelected(Math.floor(Math.random() * anecdotes.length));
+  const increaseVote = () => {
+    const updatedVotes = [...votes];
+    updatedVotes[selected] += 1;
+    setVotes(updatedVotes);
+    return (updatedVotes)
+  };
+  console.log(votes)
   return (
     <>
-    <Anecdote anecdote={anecdotes[selected]} />
-    <Button func={randomIndex} name={"Generate"} />
+      <Anecdote anecdote={anecdotes[selected]} vote={votes[selected]} />
+      <Button func={increaseVote} name="Vote" />
+      <Button func={randomIndex} name="Generate" />
     </>
   )
 }
