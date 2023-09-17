@@ -17,6 +17,23 @@ const Anecdote = ({anecdote, vote}) => {
   )
 }
 
+const MostVotedAnecdote = ({ anecdotes, votes }) => {
+  const maxVotes = Math.max(...votes);
+  const indexOfMaxVotes = votes.indexOf(maxVotes);
+
+  if (maxVotes === 0) {
+    return <p>No votes yet.</p>;
+  }
+
+  return (
+    <div>
+      <h2>Anecdote With Most Votes</h2>
+      <p>{anecdotes[indexOfMaxVotes]}</p>
+      <p>Has {maxVotes} votes.</p>
+    </div>
+  );
+};
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -42,14 +59,16 @@ const App = () => {
     setVotes(updatedVotes);
     return (updatedVotes)
   };
+
   console.log(votes)
   return (
     <>
       <Anecdote anecdote={anecdotes[selected]} vote={votes[selected]} />
       <Button func={increaseVote} name="Vote" />
-      <Button func={randomIndex} name="Generate" />
+      <Button func={randomIndex} name="Generate" /> <hr />
+      <MostVotedAnecdote anecdotes={anecdotes} votes={votes} />
     </>
   )
 }
 
-export default App
+export default App;
