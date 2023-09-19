@@ -1,15 +1,15 @@
-const Course = ({course, total}) => {
+const Course = ({header, course, total, courseIndex}) => {
     return (
         <>
-        <h1>Half Stack Application Development</h1>
+        <h2>{header}</h2>
         <ul>
-            {course.map(note => 
+            {course[courseIndex].parts.map(note => 
             <li key={note.id}>
                 {note.name} {note.exercises}
             </li>
             )}
         </ul>
-        <div><b>total of {total} exercises</b></div>
+        <b>total of {total} exercises</b><br />
         </>
     )
 }
