@@ -29,10 +29,9 @@ const App = () => {
       }
     ]
   }
-  let sum = 0;
-  course.parts.map(e => sum += e.exercises)
+  const result = course.parts.reduce((sum, value) => sum += value.exercises, 0)
 
-  return <Course course={course.parts} total={sum} />
+  return <Course course={course.parts} total={result} />
 }
 
 export default App
