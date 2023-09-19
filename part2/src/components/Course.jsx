@@ -1,4 +1,4 @@
-const Course = ({course}) => {
+const Course = ({course, total}) => {
     return (
         <>
         <h1>Half Stack Application Development</h1>
@@ -9,6 +9,7 @@ const Course = ({course}) => {
             </li>
             )}
         </ul>
+        <div><b>total of {total} exercises</b></div>
         </>
     )
 }
