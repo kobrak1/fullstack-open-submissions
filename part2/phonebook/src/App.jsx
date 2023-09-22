@@ -4,24 +4,25 @@ import { useState } from 'react'
 const Numbers = ({persons}) => {
   return (
     <ul style={{ listStyleType: 'none' }}>
-      {persons.map((e, index) => 
-      <li key={index}>
-        {e.name}
-      </li> )}
+      {persons.map(e => <li key={e.name}> {e.name} </li> )}
     </ul>
   )
 }
 
 
 const App = () => {
-  const [persons, setPersons] = useState([{name:'Arto Hellas'}]) 
+  const [persons, setPersons] = useState([{name:'Arto Hellas'}])
   const [newName, setNewName] = useState('')
-
   // handle function
   const addUser = (event) => {
     event.preventDefault();
-    setPersons([...persons, {name: newName}])
-    setNewName('');
+    // condition
+    if (persons.some(person => person.name === newName)) {
+      return alert(`There is already a ${newName} in the list!`)
+    } else {
+      setPersons([...persons, {name: newName}])
+      setNewName('');
+    }
   }
 
   return (
