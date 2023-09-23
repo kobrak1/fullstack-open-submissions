@@ -1,19 +1,29 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react'
 
-const Numbers = ({persons}) => {
+// Numbers component
+const Numbers = ({persons, filtered}) => {
+  const filteredPersons = persons.filter((person) => 
+    person.name.toLowerCase().includes(filtered.toLowerCase()));
+  // console.log(filteredPersons());
   return (
     <ul style={{ listStyleType: 'none' }}>
-      {persons.map(e => <li key={e.name}> {e.name}  {e.number} </li> )}
+      {filteredPersons.map(e => 
+      <li key={e.name}>
+         {e.name}  {e.number} 
+      </li> 
+      )}
     </ul>
   )
 }
+// filter component
 
 
 const App = () => {
   const [persons, setPersons] = useState([{name:'Arto Hellas', number:'905303888230'}])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [filtered, setFiltered] = useState('')
 
   // handle function
   const addUser = (event) => {
@@ -30,7 +40,15 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <div>
+        <input 
+        type="text"
+        value={filtered}
+        onChange={(e) => setFiltered(e.target.value)}
+        />
+      </div>
+      <h2>Add New</h2>
       <form onSubmit={addUser}>
         <div>
           name: <input
@@ -50,7 +68,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <Numbers persons={persons} />
+      <Numbers persons={persons} filtered={filtered} /> 
     </div>
   )
 }
