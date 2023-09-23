@@ -2,10 +2,9 @@
 import { useState } from 'react'
 
 // Numbers component
-const Numbers = ({persons, filtered}) => {
+const Persons = ({persons, filtered}) => {
   const filteredPersons = persons.filter((person) => 
     person.name.toLowerCase().includes(filtered.toLowerCase()));
-  // console.log(filteredPersons());
   return (
     <ul style={{ listStyleType: 'none' }}>
       {filteredPersons.map(e => 
@@ -16,7 +15,43 @@ const Numbers = ({persons, filtered}) => {
     </ul>
   )
 }
+
 // filter component
+const Filter = ({filtered, setFiltered}) => {
+  return(
+    <div>
+      <input 
+      type="text"
+      value={filtered}
+      onChange={(e) => setFiltered(e.target.value)}
+      />
+    </div>
+  )
+}
+
+// form Component
+const PersonForm = ({addUser, newName, setNewName, newNumber, setNewNumber}) => {
+  return(
+    <form onSubmit={addUser}>
+      <div>
+        name: <input
+          type='text'
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}  
+        />
+      </div>
+      <div>
+        number: <input 
+          type="number"
+          value={newNumber}
+          onChange={(e) => setNewNumber(e.target.value)} />
+      </div>
+      <div>
+        <button type='submit'>add</button>
+      </div>
+    </form>
+  )
+}
 
 
 const App = () => {
@@ -41,34 +76,11 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <div>
-        <input 
-        type="text"
-        value={filtered}
-        onChange={(e) => setFiltered(e.target.value)}
-        />
-      </div>
+      <Filter filtered={filtered} setFiltered={setFiltered} />
       <h2>Add New</h2>
-      <form onSubmit={addUser}>
-        <div>
-          name: <input
-            type='text'
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}  
-          />
-        </div>
-        <div>
-          number: <input 
-            type="number"
-            value={newNumber}
-            onChange={(e) => setNewNumber(e.target.value)} />
-        </div>
-        <div>
-          <button type='submit'>add</button>
-        </div>
-      </form>
+      <PersonForm addUser={addUser} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
       <h2>Numbers</h2>
-      <Numbers persons={persons} filtered={filtered} /> 
+      <Persons persons={persons} filtered={filtered} /> 
     </div>
   )
 }
