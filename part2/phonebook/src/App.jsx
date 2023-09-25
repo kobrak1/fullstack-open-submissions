@@ -3,15 +3,16 @@ import { useState, useEffect } from 'react'
 import PersonsService from './services/PersonsService';
 
 
-// Numbers component
-const Persons = ({persons, filtered}) => {
+// this component displays saved persons
+const Persons = ({persons, filtered, removePerson}) => {
   const filteredPersons = persons.filter((person) => 
     person.name.toLowerCase().includes(filtered.toLowerCase()));
   return (
     <ul style={{ listStyleType: 'none' }}>
       {filteredPersons.map(e => 
-      <li key={e.name}>
+      <li key={e.id}>
          {e.name}  {e.number} 
+         <button onClick={() => removePerson(e.id)}>Delete</button>
       </li> 
       )}
     </ul>
@@ -26,6 +27,7 @@ const Filter = ({filtered, setFiltered}) => {
       type="text"
       value={filtered}
       onChange={(e) => setFiltered(e.target.value)}
+      placeholder='Search...'
       />
     </div>
   )
@@ -73,7 +75,7 @@ const App = () => {
     })
   }, [])
 
-  // handle function
+  // the function adds a new person to the list
   const addUser = (event) => {
     event.preventDefault(); 
     // created a newPerson object
@@ -84,9 +86,21 @@ const App = () => {
     }
     PersonsService.create(newPerson).then(response =>{
       setPersons([...persons, response.data ])
+      console.log("person has been added")
       setNewName('');
       setNewNumber('');
     });
+  }
+  
+  // the function deletes the specified person on the list
+  const removePerson = (id) => {
+    const removedPerson = persons.find(user => user.id === id)
+    if (window.confirm(`Are you sure you want to delete ${removedPerson.name} permanently?`)) {
+      PersonsService.remove(id).then(() => {
+        setPersons(persons.filter((person) => person.id !== id))
+        console.log("person has been removed")
+      });
+    }
   }
 
   return (
@@ -96,7 +110,7 @@ const App = () => {
       <h2>Add New</h2>
       <PersonForm addUser={addUser} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
       <h2>Numbers</h2>
-      <Persons persons={persons} filtered={filtered} /> 
+      <Persons persons={persons} filtered={filtered} removePerson={removePerson} /> 
     </div>
   )
 }
