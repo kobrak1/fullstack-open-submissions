@@ -76,14 +76,17 @@ const App = () => {
   // handle function
   const addUser = (event) => {
     event.preventDefault(); 
+    // created a newPerson object
+    const newPerson = {name: newName, number: newNumber};
     // condition
     if (persons.some(person => person.name === newName)) {
       return alert(`There is already a ${newName} in the list!`)
-    } else {
-      setPersons([...persons, {name: newName, number: newNumber}])
+    }
+    axios.post("http://localhost:3001/persons", newPerson).then(response =>{
+      setPersons([...persons, response.data ])
       setNewName('');
       setNewNumber('');
-    }
+    });
   }
 
   return (
