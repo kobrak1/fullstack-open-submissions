@@ -77,20 +77,38 @@ const App = () => {
 
   // the function adds a new person to the list
   const addUser = (event) => {
-    event.preventDefault(); 
-    // created a newPerson object
-    const newPerson = {name: newName, number: newNumber};
-    // condition
-    if (persons.some(person => person.name === newName)) {
-      return alert(`There is already a ${newName} in the list!`)
+    event.preventDefault();
+    const existingPerson = persons.find((person) => person.name === newName);
+  
+    if (existingPerson) {
+      if (
+        window.confirm(
+          `${newName} is already in the phonebook. Do you want to update the number?`
+        )
+      ) {
+        const updatedPerson = { ...existingPerson, number: newNumber };
+        PersonsService.update(existingPerson.id, updatedPerson).then(() => {
+          setPersons(
+            persons.map((person) =>
+              person.id === existingPerson.id ? updatedPerson : person
+            )
+          );
+          console.log("person's number has been updated");
+          setNewName("");
+          setNewNumber("");
+        });
+      }
+    } else {
+      const newPerson = { name: newName, number: newNumber };
+      PersonsService.create(newPerson).then((response) => {
+        setPersons([...persons, response.data]);
+        console.log("person has been added");
+        setNewName("");
+        setNewNumber("");
+      });
     }
-    PersonsService.create(newPerson).then(response =>{
-      setPersons([...persons, response.data ])
-      console.log("person has been added")
-      setNewName('');
-      setNewNumber('');
-    });
-  }
+  };
+  
   
   // the function deletes the specified person on the list
   const removePerson = (id) => {
@@ -102,6 +120,7 @@ const App = () => {
       });
     }
   }
+  
 
   return (
     <div>
