@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react'
-import PersonsService from './services/PersonsService';
+import PersonsService from './services/PersonsService'
+import './index.css'
 
 
 // this component displays saved persons
@@ -42,13 +43,16 @@ const PersonForm = ({addUser, newName, setNewName, newNumber, setNewNumber}) => 
           type='text'
           value={newName}
           onChange={(e) => setNewName(e.target.value)}  
-        />
+          required/>
       </div>
       <div>
         number: <input 
-          type="number"
+          type="tel"
           value={newNumber}
-          onChange={(e) => setNewNumber(e.target.value)} />
+          onChange={(e) => setNewNumber(e.target.value)}
+          minLength={4}
+          maxLength={15}
+          required />
       </div>
       <div>
         <button type='submit'>add</button>
