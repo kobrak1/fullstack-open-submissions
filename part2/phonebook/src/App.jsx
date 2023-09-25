@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import PersonsService from './services/PersonsService';
 
 
 // Numbers component
@@ -66,7 +66,7 @@ const App = () => {
   // effect hooks
   useEffect(() => {
     console.log("effect")
-    axios.get("http://localhost:3001/persons")
+    PersonsService.getAll()
     .then(response => {
       console.log("promise fullfilled")
       setPersons(response.data)
@@ -82,7 +82,7 @@ const App = () => {
     if (persons.some(person => person.name === newName)) {
       return alert(`There is already a ${newName} in the list!`)
     }
-    axios.post("http://localhost:3001/persons", newPerson).then(response =>{
+    PersonsService.create(newPerson).then(response =>{
       setPersons([...persons, response.data ])
       setNewName('');
       setNewNumber('');
