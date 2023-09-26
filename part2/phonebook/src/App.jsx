@@ -91,7 +91,7 @@ const App = () => {
     })
   }, [])
 
-  // the function adds a new person to the list
+  // the function adds a new person to the list and updates the existing object
   const addUser = (event) => {
     event.preventDefault();
     const existingPerson = persons.find((person) => person.name === newName);
