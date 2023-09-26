@@ -24,6 +24,7 @@ const Persons = ({persons, filtered, removePerson}) => {
 const Filter = ({filtered, setFiltered}) => {
   return(
     <div>
+      Filter by name:
       <input 
       type="text"
       value={filtered}
@@ -39,14 +40,14 @@ const PersonForm = ({addUser, newName, setNewName, newNumber, setNewNumber}) => 
   return(
     <form onSubmit={addUser}>
       <div>
-        name: <input
+        Name: <input
           type='text'
           value={newName}
           onChange={(e) => setNewName(e.target.value)}  
           required/>
       </div>
       <div>
-        number: <input 
+        Number: <input 
           type="tel"
           value={newNumber}
           onChange={(e) => setNewNumber(e.target.value)}
@@ -60,7 +61,16 @@ const PersonForm = ({addUser, newName, setNewName, newNumber, setNewNumber}) => 
     </form>
   )
 }
-
+// error message component
+const Notification = ({errorMessage, successMessage}) => {
+  if (errorMessage) {
+    return <div className="error">{errorMessage}</div>
+  } else if (successMessage) {
+    return <div className="success">{successMessage}</div>
+  } else {
+    return null
+  }
+}
 
 const App = () => {
   // state hooks
@@ -68,6 +78,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filtered, setFiltered] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   // effect hooks
   useEffect(() => {
@@ -100,6 +112,16 @@ const App = () => {
           console.log("person's number has been updated");
           setNewName("");
           setNewNumber("");
+          setSuccessMessage(`${updatedPerson.name} has been updated successfully`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 3000);
+        })
+        .catch((error) => {
+          setErrorMessage(`Error while updating ${updatedPerson.name}: ${error.message}`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 3000);
         });
       }
     } else {
@@ -109,6 +131,16 @@ const App = () => {
         console.log("person has been added");
         setNewName("");
         setNewNumber("");
+        setSuccessMessage(`${newPerson.name} has been added successfully`);
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 3000);
+      })
+      .catch((error) => {
+        setErrorMessage(`Error while adding ${newPerson.name}: ${error.message}`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 3000);
       });
     }
   };
@@ -121,6 +153,16 @@ const App = () => {
       PersonsService.remove(id).then(() => {
         setPersons(persons.filter((person) => person.id !== id))
         console.log("person has been removed")
+        setSuccessMessage(`${removedPerson.name} has been removed successfully`);
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 3000);
+      })
+      .catch((error) => {
+        setErrorMessage(`Error while removing ${removedPerson.name}: ${error.message}`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 3000);
       });
     }
   }
@@ -131,9 +173,18 @@ const App = () => {
       <h1>Phonebook</h1>
       <Filter filtered={filtered} setFiltered={setFiltered} />
       <h2>Add New</h2>
-      <PersonForm addUser={addUser} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
+      <Notification errorMessage={errorMessage} successMessage={successMessage} />
+      <PersonForm 
+        addUser={addUser} 
+        newName={newName} 
+        setNewName={setNewName} 
+        newNumber={newNumber} 
+        setNewNumber={setNewNumber} />
       <h2>Numbers</h2>
-      <Persons persons={persons} filtered={filtered} removePerson={removePerson} /> 
+      <Persons 
+        persons={persons} 
+        filtered={filtered} 
+        removePerson={removePerson} /> 
     </div>
   )
 }
