@@ -1,97 +1,117 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import './App.css';
+import axios from "axios"
+import { useState, useEffect } from "react"
 
-// CountryDetail component to display detailed information for a single country
-const CountryDetail = ({ country, onClose }) => {
+const Country = ({ country }) => {
+  const [weather, setWeather] = useState(null)
+
+  const languages = Object.values(country.languages)
+  const flagUrl = country.flags.png
+  const capital = country.capital[0]
+
+  useEffect(() => {
+    const API_KEY = import.meta.env.VITE_API_KEY
+    const lat = country.capitalInfo.latlng[0]
+    const lon = country.capitalInfo.latlng[1]
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`
+    axios.get(url).then(({ data }) => {
+      setWeather(data)
+    })
+  }, [country.capitalInfo.latlng])
+10
+  if (!weather) {
+    return null
+  }
+
+  const icon = weather.weather[0].icon
+  const weatherIconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`
+
   return (
     <div>
-      <h2>{country.name.common} Details</h2>
-      <p>Region: {country.region}</p>
-      <p>Capital: {country.capital}</p>
-      <p>Area: {country.area}</p>
-      <img src={country.flags.png} alt="#" /> <br />
-      <button onClick={onClose}>Close</button>
+      <hr /> <h2 className="font-semibold">{country.name.common}</h2> <hr />
+      <div className="font-light">
+        <p>Region: {country.region}</p>
+        <p>Population: {country.population}</p>
+        <p>Capital: {capital}</p>
+
+        <h4>Languages:</h4>
+
+        <ul>
+          {languages.map((language, index) => <li key={index}>-{language}</li>)}  
+        </ul> <br />
+
+        <img className="w-20" src={flagUrl} width='200' /> <br />
+
+        <h4>Weather in {capital}</h4>
+
+        <p>Temperature: {weather.main.temp} Celsius</p>
+
+        <img src={weatherIconUrl} width='80' />
+
+        <p>Wind: {weather.wind.speed} m/s</p>
+      </div>
     </div>
-  );
+  )
 }
 
-// Display component with the list of countries and buttons to show/hide details
-const Display = ({ inputValue, setInputValue, filteredCountries }) => {
-  const [selectedCountry, setSelectedCountry] = useState(null);
+const CountryList = ({ countries, showCountry }) => {
+  if ( countries.length>10) {
+    return (
+      <div>
+        Too many matches, specify another filter
+      </div>
+    )
+  }
 
-  const showDetails = (country) => {
-    setSelectedCountry(country);
-  };
-
-  const hideDetails = () => {
-    setSelectedCountry(null);
-  };
+  if ( countries.length===1) {
+    return <Country country={countries[0]} />
+  }
 
   return (
-    <>
-      <input 
-        type="text"
-        value={inputValue}
-        onChange={e => setInputValue(e.target.value)}
-        placeholder="Search..." />
-      <ul>
-        {filteredCountries.map((country, index) => (
-          <li key={index}>
-            {country.name.common}{' '}
-            {selectedCountry === country ? (
-              <button onClick={hideDetails}>Hide Details</button>
-            ) : (
-              <button onClick={() => showDetails(country)}>Show Details</button>
-            )}
-            {selectedCountry === country && (
-              <CountryDetail country={country} onClose={hideDetails} />
-            )}
-          </li>
-        ))}
-      </ul>
-    </>
-  );
+    <div>
+      {countries.map((c, index) =>
+        <p className="my-3" key={index}>
+          {c.name.common}
+          <button 
+            className="transition duration-100 ease-in-out bg-blue-400 ml-2 px-2 text-white rounded-md hover:bg-blue-300" 
+            onClick={() => showCountry(c.name.common)}>
+            Show
+          </button>
+        </p>
+      )}
+    </div>
+  )
 }
-
+ 
 const App = () => {
-  const [inputValue, setInputValue] = useState('');
-  const [countries, setCountries] = useState([]);
-  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [search, setSearch] = useState('turkey')
+  const [countries, setCountries] = useState([])
 
   useEffect(() => {
-    // Get data from API
-    axios
-      .get('https://restcountries.com/v3.1/all')
-      .then((response) => setCountries(response.data))
-      .catch(error => {
-        console.error('There is an issue while getting data from server:', error);
-      });
-  }, []);
+    axios.get('https://restcountries.com/v3.1/all').then(({ data }) => {
+      setCountries(data)
+    })
+  }, [])
 
-  useEffect(() => {
-    // Filter countries that match our input value
-    const filtered = countries.filter(e => 
-      e.name.common.toLowerCase().includes(inputValue.toLocaleLowerCase()));
-    if (inputValue === '') {
-      setFilteredCountries([]);
-    } else if (filtered.length > 0) {
-      setFilteredCountries(filtered);
-    } else {
-      // If we don't have any match, return an empty array
-      setFilteredCountries([]);
-    }
-  }, [inputValue, countries]);
+  const matchedCountries = countries.filter(c => c.name.common.toLowerCase().includes(search.toLocaleLowerCase()))
 
   return (
-    <div>
-      <h1>Info by Country</h1>
-      <Display
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        filteredCountries={filteredCountries} />
+    <div className="flex flex-col justify-center items-center">
+      <div className="bg-slate-200 shadow-lg rounded-md p-4 mt-10">
+        <div>
+          <h3 className="text-2xl text-gray-500 font-bold m-0 ">Search for a Country</h3> <br />
+          <input 
+            className="glow rounded-md px-1 mb-5 border border-solid border-gray-400" 
+            value={search} 
+            onChange={({ target }) => setSearch(target.value)}
+            placeholder="Search..." />
+        </div>
+        <CountryList 
+          countries={matchedCountries}
+          showCountry={setSearch}
+        />
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
