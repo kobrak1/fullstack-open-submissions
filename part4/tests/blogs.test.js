@@ -1,6 +1,6 @@
 const { test } = require('node:test')
 const assert = require('node:assert')
-const {dummy, totalLikes} = require('../utils/list_helper')
+const {dummy, totalLikes, favoriteBlogs} = require('../utils/list_helper')
 
 const blogs = [
   {
@@ -64,4 +64,18 @@ test('verify the total likes', () => {
   const result = totalLikes(blogs)
 
   assert.strictEqual(result, 36)
+})
+
+test('this is the blog that got the highest amount of likes', () => {
+  const result = favoriteBlogs(blogs)
+  console.log(typeof result)
+
+  assert.deepStrictEqual(result,   {
+    _id: "5a422b3a1b54a676234d17f9",
+    title: "Canonical string reduction",
+    author: "Edsger W. Dijkstra",
+    url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+    likes: 12,
+    __v: 0
+  })
 })
