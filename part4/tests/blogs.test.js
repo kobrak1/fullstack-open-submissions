@@ -1,6 +1,6 @@
 const { test } = require('node:test')
 const assert = require('node:assert')
-const {dummy, totalLikes, favoriteBlogs} = require('../utils/list_helper')
+const {dummy, totalLikes, favoriteBlogs, mostBlogs} = require('../utils/list_helper')
 
 const blogs = [
   {
@@ -68,7 +68,6 @@ test('verify the total likes', () => {
 
 test('this is the blog that got the highest amount of likes', () => {
   const result = favoriteBlogs(blogs)
-  console.log(typeof result)
 
   assert.deepStrictEqual(result,   {
     _id: "5a422b3a1b54a676234d17f9",
@@ -78,4 +77,18 @@ test('this is the blog that got the highest amount of likes', () => {
     likes: 12,
     __v: 0
   })
+})
+
+test('this is the author with the largest number of blogs', () => {
+  const result = mostBlogs(blogs)
+  const authorInfo = {
+    author: 'Robert C. Martin',
+    blogs: 3
+  }
+  const resultInfo = {
+    author: result.maxElement,
+    blogs: result.maxCount
+  }
+
+  assert.deepStrictEqual(resultInfo, authorInfo)
 })

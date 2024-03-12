@@ -13,6 +13,30 @@ const favoriteBlogs = (blogs) => {
     return blogs.find(blog => blog.likes === highestLike)
 }
 
+const mostBlogs = (blogs) => {
+    const blogAuthors = blogs.map(blog => blog.author)
+    const mostFrequent = (arr) => {
+        const frequencyMap = {}
+        let maxElement = arr[0]
+        let maxCount = 1
+        for (let i = 0; i < arr.length; i++) {
+            const element = arr[i]
+            if (frequencyMap[element]) {
+                frequencyMap[element]++
+            } else {
+                frequencyMap[element] = 1
+            }
+
+            if (frequencyMap[element] > maxCount) {
+                maxElement = element
+                maxCount = frequencyMap[element]
+            }
+        }
+        return {maxElement, maxCount}
+    }
+    return mostFrequent(blogAuthors)
+}
+
 module.exports = {
-    dummy, totalLikes, favoriteBlogs
+    dummy, totalLikes, favoriteBlogs, mostBlogs
 }
