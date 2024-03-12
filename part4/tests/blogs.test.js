@@ -1,6 +1,6 @@
 const { test } = require('node:test')
 const assert = require('node:assert')
-const {dummy, totalLikes, favoriteBlogs, mostBlogs} = require('../utils/list_helper')
+const list_helper = require('../utils/list_helper')
 
 const blogs = [
   {
@@ -55,19 +55,19 @@ const blogs = [
 
 test('there is an array of blogs', () => {
 
-  const result = dummy(blogs)
+  const result = list_helper.dummy(blogs)
 
   assert.strictEqual(result, 1)
 })
 
 test('verify the total likes', () => {
-  const result = totalLikes(blogs)
+  const result = list_helper.totalLikes(blogs)
 
   assert.strictEqual(result, 36)
 })
 
 test('this is the blog that got the highest amount of likes', () => {
-  const result = favoriteBlogs(blogs)
+  const result = list_helper.favoriteBlogs(blogs)
 
   assert.deepStrictEqual(result,   {
     _id: "5a422b3a1b54a676234d17f9",
@@ -80,7 +80,7 @@ test('this is the blog that got the highest amount of likes', () => {
 })
 
 test('this is the author with the largest number of blogs', () => {
-  const result = mostBlogs(blogs)
+  const result = list_helper.mostBlogs(blogs)
   const authorInfo = {
     author: 'Robert C. Martin',
     blogs: 3
@@ -88,6 +88,20 @@ test('this is the author with the largest number of blogs', () => {
   const resultInfo = {
     author: result.maxElement,
     blogs: result.maxCount
+  }
+
+  assert.deepStrictEqual(resultInfo, authorInfo)
+})
+
+test('this is the author with the largest number of likes', () => {
+  const result = list_helper.mostLikes(blogs)
+  const authorInfo = {
+    author: "Edsger W. Dijkstra",
+    likes: 17
+  }
+  const resultInfo = {
+    author: result.mostLikedAuthor,
+    likes: result.maxLikes
   }
 
   assert.deepStrictEqual(resultInfo, authorInfo)
