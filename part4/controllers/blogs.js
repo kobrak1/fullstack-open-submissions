@@ -2,7 +2,7 @@ const Blog = require('../models/blog')
 const blogsRouter = require('express').Router()
 
 // check if the server works
-blogsRouter.get('/', (request, response) => {
+blogsRouter.get('/', async (request, response,) => {
   if (response.statusCode !== 200) {
     console.log('response is not ok')
   }
@@ -11,22 +11,24 @@ blogsRouter.get('/', (request, response) => {
 })
 
 // get all blogs
-blogsRouter.get('/all', (request, response) => {
-  Blog.find({})
-    .then(blogs => {
-      response.json(blogs)
-    })
+blogsRouter.get('/all', async (request, response, next) => {
+  try {
+    const blogs = await Blog.find({})
+    response.status(200).json(blogs)
+  } catch (exception) {
+    next(exception)
+  }
 })
 
 // post a blog
-blogsRouter.post('/', (request, response, next) => {
-  const blog = new Blog(request.body)
-
-  blog.save()
-    .then(savedBlog => {
-      response.json(savedBlog)
-    })
-    .catch(error => next(error))
+blogsRouter.post('/', async (request, response, next) => {
+  try {
+    const blog = new Blog(request.body)
+    const savedBlog = await blog.save()
+    response.status(201).json(savedBlog)
+  } catch (exception) {
+    next(exception)
+  }
 })
 
 module.exports = blogsRouter
