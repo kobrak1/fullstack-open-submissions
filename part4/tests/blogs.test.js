@@ -111,11 +111,23 @@ test("a valid blog can be added", async () => {
   assert.strictEqual(blogsAtEnd.length, list_helper.blogs.length + 1)
 })
 
-test('data has not been sent since the like property is missing', async () => {
+test('data has not been sent since the likes property is missing', async () => {
   const newData = {
     title: "Scum Bags",
     author: "Burak Karhan",
     url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+  } 
+
+  await api.post('/api/blogs').send(newData).expect(400)
+  const dataFromDb = await Blog.find({})
+  assert.strictEqual(dataFromDb.length, list_helper.blogs.length)
+})
+
+test('data has not been sent since the url or title property is missing', async () => {
+  const newData = {
+    title: "Scum Bags",
+    author: "Burak Karhan",
+    likes: 10,
   } 
 
   await api.post('/api/blogs').send(newData).expect(400)
