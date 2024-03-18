@@ -71,6 +71,16 @@ test('this is the author with the largest number of likes', () => {
   assert.deepStrictEqual(resultInfo, authorInfo)
 })
 
+test('unique identifier property of blog posts is named as id', async () => {
+    const response = await api.get('/api/blogs/all');
+    
+    // Check if each blog post in the response has an 'id' property
+    response.body.forEach(blogPost => {
+      assert.ok(blogPost.id, 'Blog post does not have an id property');
+      assert.strictEqual(typeof blogPost.id, 'string', 'Blog post id is not a string');
+    });
+})
+
 
 after(async () => {
   await mongoose.connection.close()
