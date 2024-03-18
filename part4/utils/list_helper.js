@@ -1,3 +1,5 @@
+const Blog = require('../models/blog')
+
 const blogs = [
   {
     _id: "5a422a851b54a676234d17f7",
@@ -48,6 +50,12 @@ const blogs = [
     __v: 0
   }  
 ]
+
+const getAllData = async () => {
+  const blogs = await Blog.find({})
+  const newBlogs = blogs.map(blog => blog.toJSON)
+  return newBlogs
+}
 
 
 const dummy = (blogs) => {
@@ -120,4 +128,5 @@ module.exports = {
   mostBlogs,
   mostLikes,
   blogs,
+  getAllData,
 };
