@@ -57,6 +57,12 @@ const getAllData = async () => {
   return newBlogs
 }
 
+const blogsIdList = async () => {
+  const blogs = await Blog.find({})
+  const blogIds = blogs.map(blog => blog.id)
+  return blogIds
+}
+
 
 const dummy = (blogs) => {
   // ...
@@ -129,4 +135,5 @@ module.exports = {
   mostLikes,
   blogs,
   getAllData,
+  blogsIdList,
 };
