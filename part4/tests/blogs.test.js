@@ -139,10 +139,12 @@ describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await list_helper.getAllData()
     const blogToDelete = blogsAtStart[0]
+    console.log('blogToDelete:', blogToDelete)
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
       .expect(204)
+      .expect('Content-Type', /application\json/)
 
     const blogsAtEnd = await list_helper.getAllData()
     const urls = blogsAtEnd.map(i => i.url)
