@@ -21,11 +21,11 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Blog'
         }
-    ]
+    ],
 })
 
 userSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
+    transform: (transform, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
         delete returnedObject.__v
