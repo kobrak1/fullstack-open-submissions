@@ -4,7 +4,8 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        unique: true      // this ensures the uniqueness of the username
+        unique: true ,     // this ensures the uniqueness of the username
+        minLength: 3
     },
     name: {
         type: String,
@@ -12,7 +13,8 @@ const userSchema = new mongoose.Schema({
     },
     passwordHash: {
         type: String,
-        required: true
+        required: true,
+        minLength: 3
     },
     blogs: [
         {

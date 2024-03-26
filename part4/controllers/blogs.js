@@ -1,29 +1,20 @@
 const Blog = require("../models/blog");
 const blogsRouter = require("express").Router();
 
-// check if the server works
-blogsRouter.get("/", async (request, response) => {
-  if (response.statusCode !== 200) {
-    console.log("response is not ok");
-  }
-  console.log("response is ok");
-  response.send("hello mars hellooo");
-});
-
 // get all blogs
-blogsRouter.get("/all", async (request, response, next) => {
+blogsRouter.get("/", async (request, response, next) => {
   try {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({}).populate('userrr', { username: 1, name: 1 })
     response.status(200).json(blogs);
   } catch (exception) {
-    next(exception);
+    next(exception)
   }
 });
 
 // get a specific blog
 blogsRouter.get("/:id", async (request, response, next) => {
   try {
-    const blog = await Blog.findById(request.params.id);
+    const blog = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1 })
     blog
       ? response.json(blog)
       : response.status(404).send("there is not a blog with this id");
