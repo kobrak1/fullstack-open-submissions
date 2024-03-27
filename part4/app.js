@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
 const mongoose = require('mongoose')
 const config = require('./utils/config')
 const logger = require('./utils/logger')
@@ -27,6 +28,7 @@ app.use(middleware.requestLogger)
 
 app.use('/api/blogs', blogsRouter) // to attach '/api/blogs' to blogsRouter
 app.use('/api/users', usersRouter) // to attach '/api/users' to usersRouter
+app.use('/api/login', loginRouter) // to attach '/api/login' to loginRouter
 
 app.use(middleware.unknownEndPoint)
 app.use(middleware.errorHandler)
