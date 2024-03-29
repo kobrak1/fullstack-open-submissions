@@ -60,12 +60,16 @@ blogsRouter.put("/:id", async (request, response, next) => {
 });
 
 // delete a blog
-blogsRouter.delete("/:id", async (request, response, next) => {
+blogsRouter.delete("/:id", blogExtractor, async (request, response, next) => {
   try {
-    const blogToDelete = await Blog.findByIdAndDelete(request.params.id);
-    blogToDelete
-      ? response.status(204).end()
-      : response.status(404).send("there is not a blog with this id");
+    const authorId = request.blog.user.toString()
+    const userId = request.token.id
+
+    if ( authorId && authorId === userId) {
+      await Blog.findByIdAndDelete(request.params.id);
+      response.status(204).end()
+    }
+    else response.status(204).send({ error: 'You are not allowed to delete someone else\'s blogs' })
   } catch (error) {
     next(error);
   }
