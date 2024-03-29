@@ -1,8 +1,7 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
 const User = require('../models/user')
-const jwt = require('jsonwebtoken')
-const { tokenExtractor } = require('../utils/middleware')
+const { userExtractor, blogExtractor } = require('../utils/middleware')
 
 // get all blogs
 blogsRouter.get("/", async (request, response, next) => {
@@ -27,20 +26,15 @@ blogsRouter.get("/:id", async (request, response, next) => {
 });
 
 // post a blog
-blogsRouter.post("/", async (request, response, next) => {
+blogsRouter.post("/", userExtractor, async (request, response, next) => {
   try {
-    const body = request.body
-    const decodedToken = request.token  // access the token from the request object
+    const body = request.body // assign the request body to variable 'body'
 
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: 'invalid token' })
-    }
-
-    const user = await User.findById(decodedToken.id)
+    const user = request.user  // assign the user data set by userExtractor as 'request.user' to variable 'user'
     
-    const blog = new Blog({ ...body, user: user.id })
+    const newBlog = new Blog({ ...body, user: user.id })
 
-    const savedBlog = await blog.save();
+    const savedBlog = await newBlog.save();
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
 
