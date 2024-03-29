@@ -1,12 +1,22 @@
-const { test, after, beforeEach, describe } = require("node:test");
+const { test, after, beforeEach, beforeAll, describe } = require("node:test");
 const assert = require("node:assert");
 const mongoose = require("mongoose");
 const list_helper = require("../utils/list_helper");
 const app = require("../app");
 const supertest = require("supertest");
-const api = supertest(app);
+const api = supertest.agent(app);
 
 const Blog = require('../models/blog')
+
+beforeAll(async () => {
+  const response = await api
+    .post('/api/login')
+    .send({
+      username: "admin",
+      password: "admin123"
+  })
+  api.auth(response.body.token, { type: 'bearer' })
+})
 
 beforeEach(async () => {
   await Blog.deleteMany({})
