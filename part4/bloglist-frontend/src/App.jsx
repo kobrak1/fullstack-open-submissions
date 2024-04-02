@@ -130,6 +130,7 @@ const App = () => {
   )
 
   return (
+    // in this code we render loginForm and blogForm conditionally
     <>
     <div className='blogs-list'>
       <h2>blogs</h2>
