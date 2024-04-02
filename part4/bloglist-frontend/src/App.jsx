@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { message } from 'antd'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -41,8 +42,10 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      message.success(`${user.name} logged in successfully`)
     } catch (error) {
       console.log('Error while logging in:', error.message);
+      message.error('Login failed. Please check your username and password!')
     }
   }
 
@@ -69,13 +72,15 @@ const App = () => {
     }
 
     blogService
-      .create(newBlog)
+      .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
         setNewBlog({ title: '', author: '', url: '', likes: 0 })
+        message.success('Blog has been created successfully')
       })
       .catch(error => {
         console.log('Error while posting:', error.message)
+        message.error('Error while creating a new blog!')
       })
   }
 
