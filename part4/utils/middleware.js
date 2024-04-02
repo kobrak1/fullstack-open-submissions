@@ -42,14 +42,14 @@ const tokenExtractor = (request, response, next) => {
   } else next()
 }
 
-const userExtractor = (request, response, next) => {
-  request.user = User.findById(request.token.id)
+const userExtractor = async (request, response, next) => {
+  request.user = await User.findById(request.token.id)
 
   next()
 }
 
-const blogExtractor = (request, response, next) => {
-  request.blog = Blog.findById(request.params.id)
+const blogExtractor = async (request, response, next) => {
+  request.blog = await Blog.findById(request.params.id)
 
   next()
 }
