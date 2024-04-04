@@ -43,6 +43,7 @@ const App = () => {
       setUsername('')
       setPassword('')
       message.success(`${user.name} logged in successfully`)
+      console.log(`${user.name} logged in`)
     } catch (error) {
       console.log('Error while logging in:', error.message);
       message.error('Login failed. Please check your username and password!')
@@ -53,6 +54,8 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedUser')
     setUser(null)
+    message.success(`${user.name} logged out`)
+    console.log(`${user.name} logged out`)
   }
 
   // handle blog change
@@ -84,27 +87,6 @@ const App = () => {
       })
   }
 
-  // login form to enter username and password
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div className="username">
-        <input 
-          type="text"
-          value={username}
-          name='Username'
-          onChange={e => setUsername(e.target.value)} />
-      </div>
-      <div className="password">
-        <input 
-          type="text"
-          value={password}
-          name='Password'
-          onChange={e => setPassword(e.target.value)} />
-      </div>
-      <button type='submit'>login</button>
-    </form>
-  )
-
   // blog form to create a new blog
   const blogForm = () => (
     <form onSubmit={addBlog}>
@@ -134,24 +116,44 @@ const App = () => {
     </form>
   )
 
+    // login form to enter username and password
+  if (user === null) {
+    return (
+      <form onSubmit={handleLogin}>
+        <div className="username">
+          <input 
+            type="text"
+            value={username}
+            name='Username'
+            onChange={e => setUsername(e.target.value)} 
+            placeholder='username' />
+        </div>
+        <div className="password">
+          <input 
+            type="text"
+            value={password}
+            name='Password'
+            onChange={e => setPassword(e.target.value)}
+            placeholder='password' 
+          />
+        </div>
+        <button type='submit'>login</button>
+      </form>
+    )
+  }
+
   return (
-    // in this code we render loginForm and blogForm conditionally
-    <>
     <div className='blogs-list'>
       <h2>blogs</h2>
-      {user === null
-        ? loginForm()
-        : <div>
-            <p>{user.name} logged in</p>
-            <button onClick={() => handleLogout()}>logout</button>
-            {blogForm()}
-          </div>
-      }
+      <div>
+        <p>{user.name} logged in</p>
+        <button onClick={() => handleLogout()}>logout</button>
+        {blogForm()}
+      </div>
       {blogs.map((blog, index) =>
         <Blog key={blog.id} blog={blog} index={index} />
       )}
     </div>
-    </>
   )
 }
 
