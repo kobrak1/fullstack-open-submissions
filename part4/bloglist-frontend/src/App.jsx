@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,7 +12,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const inputRef = useRef(null)
+  const blogFormRef = useRef()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -27,6 +28,21 @@ const App = () => {
       setBlogs( blogs )
     )  
   }, [])
+
+  // handle creating a new blog
+  const addBlog = (blogObject) => {
+    blogFormRef.current.toggleVisibility()
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        message.success('Blog has been created successfully')
+      })
+      .catch(error => {
+        console.log('Error while posting:', error.message)
+        message.error('Error while creating a new blog!')
+      })
+  }
 
   // handle login
   const handleLogin = async (e) => {
@@ -57,35 +73,6 @@ const App = () => {
     setUser(null)
     message.success(`${user.name} logged out`)
     console.log(`${user.name} logged out`)
-  }
-
-  // handle blog change
-  const handleBlogChange = (e) => {
-    const { name, value } = e.target
-    setNewBlog({...newBlog, [name]: value})
-  }
-
-  // handle creating a new blog
-  const addBlog = (e) => {
-    e.preventDefault()
-    const blogObject = {
-      title: newBlog.title,
-      author: newBlog.author,
-      url: newBlog.url,
-      likes: newBlog.likes
-    }
-
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        setNewBlog({ title: '', author: '', url: '', likes: 0 })
-        message.success('Blog has been created successfully')
-      })
-      .catch(error => {
-        console.log('Error while posting:', error.message)
-        message.error('Error while creating a new blog!')
-      })
   }
 
   // blog form to create a new blog
@@ -131,7 +118,7 @@ const App = () => {
         </div>
         <div className="password">
           <input 
-            type="text"
+            type="password"
             value={password}
             name='Password'
             onChange={e => setPassword(e.target.value)}
@@ -149,8 +136,8 @@ const App = () => {
       <div>
         <p>{user.name} logged in</p>
         <button onClick={() => handleLogout()}>logout</button>
-        <Togglable buttonLabel='new blog'>
-          {blogForm()}
+        <Togglable buttonLabel='new blog' ref={blogFormRef}>
+          <BlogForm createBlog={addBlog} />
         </Togglable>
       </div>
       {blogs.map((blog, index) =>
