@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { message } from 'antd'
+import Blog from './components/Blog'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -125,7 +126,7 @@ const App = () => {
             type="text"
             value={username}
             name='Username'
-            onChange={e => setUsername(e.target.value)} 
+            onChange={e => setUsername(e.target.value)}
             placeholder='username' />
         </div>
         <div className="password">
@@ -148,7 +149,9 @@ const App = () => {
       <div>
         <p>{user.name} logged in</p>
         <button onClick={() => handleLogout()}>logout</button>
-        {blogForm()}
+        <Togglable buttonLabel='new blog'>
+          {blogForm()}
+        </Togglable>
       </div>
       {blogs.map((blog, index) =>
         <Blog key={blog.id} blog={blog} index={index} />
