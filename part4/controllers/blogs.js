@@ -69,7 +69,7 @@ blogsRouter.delete("/:id", blogExtractor, async (request, response, next) => {
       await Blog.findByIdAndDelete(request.params.id);
       response.status(204).end()
     }
-    else response.status(204).send({ error: 'You are not allowed to delete someone else\'s blogs' })
+    else response.status(401).send({ error: 'You are not allowed to delete someone else\'s blogs' })
   } catch (error) {
     next(error);
   }
