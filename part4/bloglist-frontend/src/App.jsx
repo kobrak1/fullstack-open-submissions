@@ -44,6 +44,22 @@ const App = () => {
       })
   }
 
+  // handle updating a blog
+  const updateBlog = (id) => {
+    const blog = blogs.find(b => b.id === id)
+    const changedBlog = {...blog, likes: blog.likes + 1}
+
+    blogService
+      .update(id, changedBlog)
+      .then(returnedBlog => {
+        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+      })
+      .catch(error => {
+        console.log('Error:', error.message)
+        message.error(`${error.message}`)
+      })
+  }
+
   // handle login
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -141,7 +157,12 @@ const App = () => {
         </Togglable>
       </div>
       {blogs.map((blog, index) =>
-        <Blog key={blog.id} blog={blog} index={index} />
+        <Blog 
+          key={blog.id} 
+          blog={blog} 
+          index={index}
+          updateBlog={() => updateBlog(blog.id)}
+        />
       )}
     </div>
   )
