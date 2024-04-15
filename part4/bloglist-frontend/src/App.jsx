@@ -29,6 +29,9 @@ const App = () => {
     )  
   }, [])
 
+  // sorted blogs by name
+  const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
+
   // handle creating a new blog
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
@@ -156,7 +159,7 @@ const App = () => {
           <BlogForm createBlog={addBlog} />
         </Togglable>
       </div>
-      {blogs.map((blog, index) =>
+      {sortedBlogs.map((blog, index) =>
         <Blog 
           key={blog.id} 
           blog={blog} 
