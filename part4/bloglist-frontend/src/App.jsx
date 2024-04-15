@@ -5,6 +5,7 @@ import loginService from './services/login'
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import Footer from './components/Footer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -63,6 +64,22 @@ const App = () => {
       })
   }
 
+  // handle removing a blog
+  const removeBlog = async (id) => {
+    try {
+      window.confirm(`Are you sure you want to delete this blog by ${user.username}`)
+      await blogService.remove(id)    // send delete request to the backend
+
+      const updatedBlogs = blogs.filter(blog => blog.id !== id)   // filter out the removed item from the current list of blogs
+  
+      setBlogs(updatedBlogs)    // update the state with the new list of blogs
+      message.success('Blog deleted successfully')
+    } catch (error) {
+      console.error('Error while deleting blog:', error)
+      message.error('Error while deleting blog')
+    }
+  }
+
   // handle login
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -94,36 +111,7 @@ const App = () => {
     console.log(`${user.name} logged out`)
   }
 
-  // blog form to create a new blog
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <input
-        type='text' 
-        name="title"
-        value={newBlog.title}
-        onChange={handleBlogChange}
-        ref={inputRef}  // to focus on the textarea when the component is rendered
-        placeholder='title'
-      />
-      <input 
-        type='text'
-        name='author'
-        value={newBlog.author}
-        onChange={handleBlogChange}
-        placeholder='author'
-      />
-      <input 
-        type='text'
-        name='url'
-        value={newBlog.url}
-        onChange={handleBlogChange}
-        placeholder='url'
-      />
-      <button type='submit'>post</button>
-    </form>
-  )
-
-    // login form to enter username and password
+  // login form to enter username and password
   if (user === null) {
     return (
       <form onSubmit={handleLogin}>
@@ -150,6 +138,7 @@ const App = () => {
   }
 
   return (
+    <>
     <div className='blogs-list'>
       <h2>blogs</h2>
       <div>
@@ -165,9 +154,12 @@ const App = () => {
           blog={blog} 
           index={index}
           updateBlog={() => updateBlog(blog.id)}
+          removeBlog={() => removeBlog(blog.id)}
         />
       )}
     </div>
+    <Footer />
+    </>
   )
 }
 
