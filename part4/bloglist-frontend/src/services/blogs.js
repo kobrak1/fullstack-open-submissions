@@ -42,10 +42,10 @@ const remove = async (id) => {
   }
 }
 
-export default { 
-  getAll, 
+export default {
+  getAll,
   create,
   update,
   remove,
   setToken,
- }
+}
