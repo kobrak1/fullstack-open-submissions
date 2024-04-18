@@ -44,7 +44,7 @@ const Blog = ({ blog, index, updateBlog, removeBlog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  index: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
   updateBlog: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired
 }
