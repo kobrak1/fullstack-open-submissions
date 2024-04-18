@@ -1,28 +1,26 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
+import { MainContext } from './context/MainProvider'
 import { message } from 'antd'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import Footer from './components/Footer'
 import SkeletonLoader from './components/Animations/Skeleton'
-import LoginForm from './components/LoginForm'
+import Auth from './components/Auth/Auth'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const blogFormRef = useRef()
+  const { user, setUser } = useContext(MainContext)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      const userInfo = JSON.parse(loggedUserJSON)
+      setUser(userInfo)
+      blogService.setToken(userInfo.token)
     }
   }, [])
 
@@ -41,7 +39,7 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
-      .then((returnedBlog) => {
+      .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
         message.success('Blog has been created successfully')
       })
@@ -80,31 +78,7 @@ const App = () => {
       setBlogs(updatedBlogs) // update the state with the new list of blogs
       message.success('Blog deleted successfully')
     } catch (error) {
-      console.error('Error while deleting blog:', error)
-      message.error('Error while deleting blog')
-    }
-  }
-
-  // handle login
-  const handleLogin = async (e) => {
-    e.preventDefault()
-
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      })
-
-      window.localStorage.setItem('loggedUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-      message.success(`${user.name} logged in successfully`)
-      console.log(`${user.name} logged in`)
-    } catch (error) {
-      console.log('Error while logging in:', error.message)
-      message.error('Login failed. Please check your username and password!')
+      message.error(error.message)
     }
   }
 
@@ -119,13 +93,7 @@ const App = () => {
   // login form to enter username and password
   if (user === null) {
     return (
-      <LoginForm
-        handleLogin={handleLogin}
-        username={username}
-        password={password}
-        setUsername={setUsername}
-        setPassword={setPassword}
-      />
+      <Auth />
     )
   }
 
@@ -140,9 +108,9 @@ const App = () => {
             <BlogForm createBlog={addBlog} />
           </Togglable>
         </div>
-        {loading ? (
-          <SkeletonLoader />
-        ) : (
+        {loading
+          ? <SkeletonLoader />
+          :
           sortedBlogs.map((blog, index) => (
             <Blog
               key={blog.id}
@@ -151,8 +119,8 @@ const App = () => {
               updateBlog={() => updateBlog(blog.id)}
               removeBlog={() => removeBlog(blog.id)}
             />
-          ))
-        )}
+          )
+          )}
       </div>
       <Footer />
     </>
