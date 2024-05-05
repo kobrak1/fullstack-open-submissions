@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import { MainContext } from '../../context/MainProvider'
 import { message } from 'antd'
-import RegisterForm from '../RegisterForm'
+import RegisterForm from './RegisterForm'
 import loginService from '../../services/login'
 import blogService from '../../services/blogs.js'
 

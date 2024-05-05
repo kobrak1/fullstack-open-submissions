@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import loginService from '../../services/login'
 import blogService from '../../services/blogs'
-import LoginForm from '../LoginForm'
+import LoginForm from './LoginForm'
 import { message } from 'antd'
 import { MainContext } from '../../context/MainProvider'
 
@@ -37,12 +37,14 @@ const Login = () => {
   }
 
   return (
-    <LoginForm
-      handleLogin={handleLogin}
-      username={formData.username}
-      password={formData.password}
-      handleInputChange={handleInputChange}
-    />
+    <div>
+      <LoginForm
+        handleLogin={handleLogin}
+        username={formData.username}
+        password={formData.password}
+        handleInputChange={handleInputChange}
+      />
+    </div>
   )
 }
 
