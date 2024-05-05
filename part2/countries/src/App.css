@@ -1,0 +1,11 @@
+/* custom.css */
+.glow {
+    box-shadow: 0 0 10px rgba(0, 0, 255, 0.5); /* Add a blue glow effect */
+  }
+  
+/* custom.css */
+.border-glow {
+    border-color: rgba(0, 0, 255, 0.5); /* Add a blue glow effect on hover */
+    box-shadow: 0 0 10px rgba(0, 0, 255, 0.5); /* Add a shadow effect on hover */
+  }
+  
