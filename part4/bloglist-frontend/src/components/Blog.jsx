@@ -28,7 +28,9 @@ const Blog = ({ blog, index, updateBlog, removeBlog }) => {
           <p><b>{index + 1}</b> - {blog.title} <b>{blog.author}</b></p>
           <button onClick={() => setVisible(!visible)}>hide</button>
         </div>
-        <a href='#'>{blog.url}</a>
+        <a href={blog.url} rel="noreferrer" target='_blank'>
+          {blog.url}
+        </a>
         <div>
           <p>likes <b>{blog.likes}</b></p>
           <button onClick={updateBlog}>like</button>
