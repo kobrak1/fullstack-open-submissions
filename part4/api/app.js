@@ -31,6 +31,12 @@ app.use('/api/blogs', blogsRouter) // to attach '/api/blogs' to blogsRouter
 app.use('/api/users', usersRouter) // to attach '/api/users' to usersRouter
 app.use('/api/login', loginRouter) // to attach '/api/login' to loginRouter
 
+// apply testing route if the NODE_ENV=test
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
+
 app.use(middleware.unknownEndPoint)
 app.use(middleware.errorHandler)
 
