@@ -1,4 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
+const { loginWith, createBlog } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -21,34 +22,24 @@ describe('Blog app', () => {
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      await page.getByTestId('username').fill('admin')
-      await page.getByTestId('password').fill('admin')
-      await page.getByRole('button', { name: 'login' }).click()
-      await expect(page.getByText('admin logged in', { exact: true })).toBeVisible()
+      loginWith(page, 'admin', 'admin')
+      await expect(page.getByText('admin logged in')).toBeVisible()
     })
 
     test('fails with wrong credentials', async ({ page }) => {
-      await page.getByTestId('username').fill('admin')
-      await page.getByTestId('password').fill('admin1')
-      await page.getByRole('button', { name: 'login' }).click()
+      loginWith(page, 'admin1', 'admin1')
       await expect(page.getByRole('button', { name: 'login' })).toBeVisible()
     })
   })
 
   describe('When logged in', () => {
     beforeEach(async ({ page }) => {
-      await page.getByTestId('username').fill('admin')
-      await page.getByTestId('password').fill('admin')
-      await page.getByRole('button', { name: 'login' }).click()
+      loginWith(page, 'admin', 'admin')
       await expect(page.getByText('admin logged in', { exact: true })).toBeVisible()
     })
   
     test('a new blog can be created', async ({ page }) => {
-      await page.getByRole('button', { name: 'new blog' }).click()
-      await page.getByTestId('title').fill('WW2')
-      await page.getByTestId('author').fill('Celal Sengor')
-      await page.getByTestId('url').fill('arabam.com')
-      await page.getByRole('button', { name: 'save' }).click()
+      createBlog(page, 'sample_title', 'sample_author', 'sample_url.com')
       await expect(page.getByRole('button', { name: 'view' })).toBeVisible()
     })
   })
