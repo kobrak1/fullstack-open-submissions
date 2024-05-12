@@ -57,4 +57,17 @@ describe('Blog app', () => {
     })
   })
 
+  describe('A blog can be removed', () => {
+    beforeEach(async ({page}) => {
+      loginWith(page, 'admin', 'admin')
+      createBlog(page, 'sample_title', 'sample_author', 'sample_url.com')
+    })
+
+    test('when a user click the remove button it removes the blog', async ({page}) => {
+      await page.getByRole('button', { name: 'view' }).click()
+      await page.getByRole('button', { name: 'remove' }).click()
+      await expect(page.getByText('likes 1')).not.toBeVisible()
+    })
+  })
+
 })
