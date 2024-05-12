@@ -44,4 +44,17 @@ describe('Blog app', () => {
     })
   })
 
+  describe('A blog can be edited', () => {
+    beforeEach(async ({page}) => {
+      loginWith(page, 'admin', 'admin')
+      createBlog(page, 'sample_title', 'sample_author', 'sample_url.com')
+    })
+
+    test('when a user click the like button it increases the like count', async ({page}) => {
+      await page.getByRole('button', { name: 'view' }).click()
+      await page.getByRole('button', { name: 'like' }).click()
+      await expect(page.getByText('likes 1')).toBeVisible()
+    })
+  })
+
 })
