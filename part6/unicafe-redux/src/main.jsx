@@ -1,8 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import { createStore } from 'redux'
 import reducer from './reducer'
+import ThumbUpOutLinedIcon from '@mui/icons-material/ThumbUpOutlined'
+import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined'
+import ThumbsUpDownOutlinedIcon from '@mui/icons-material/ThumbsUpDownOutlined';
 
 const store = createStore(reducer)
 
@@ -23,6 +25,11 @@ const App = () => {
     store.dispatch({ type: 'ZERO' })
   }
 
+  const iconStyle = {
+    cursor: 'pointer',
+    margin: '1rem 1rem 0 0'
+  }
+
   return (
     <div>
       <button onClick={good}>good</button> 
@@ -32,6 +39,9 @@ const App = () => {
       <div>good {store.getState().good}</div>
       <div>ok {store.getState().ok}</div>
       <div>bad {store.getState().bad}</div>
+      <ThumbUpOutLinedIcon onClick={good} style={iconStyle} />
+      <ThumbsUpDownOutlinedIcon onClick={ok} style={iconStyle} />
+      <ThumbDownOffAltOutlinedIcon onClick={bad} style={iconStyle} />
     </div>
   )
 }
