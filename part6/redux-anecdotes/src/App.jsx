@@ -7,6 +7,7 @@ const App = () => {
   const sortedAnecdotes = anecdotes.sort((a, b) => b.votes - a.votes)
   const dispatch = useDispatch()
 
+  // functions with action creators
   const vote = (id) => {
     dispatch(voteAnecdote(id))
   }
@@ -18,6 +19,7 @@ const App = () => {
     dispatch(addAnecdote(content))
   }
 
+  // JSX code of the application
   return (
     <div>
       <h2>Anecdotes</h2>
