@@ -1,3 +1,5 @@
+import uuid4 from 'uuid4'
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -7,12 +9,10 @@ const anecdotesAtStart = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
-const getId = () => (100000 * Math.random()).toFixed(0)
-
 const asObject = (anecdote) => {
   return {
     content: anecdote,
-    id: getId(),
+    id: uuid4(),
     votes: 0
   }
 }
@@ -34,7 +34,8 @@ export const addAnecdote = (content) => {
   }
 }
 
-const reducer = (state = initialState, action) => {
+// anecdote reducers
+const anecdoteReducer = (state = initialState, action) => {
   switch(action.type) {
     case 'VOTE':
       return state.map(anecdote =>
@@ -42,19 +43,17 @@ const reducer = (state = initialState, action) => {
             ? anecdote
             : { ...anecdote, votes: anecdote.votes + 1 }
         )
-      case 'ADD': {
-        const newAnecdote = {
-          content: action.payload.content,
-          id: getId(),
-          votes:0
-        }
-        console.log('New Anecdote:',newAnecdote)
-        console.log('Redux State:', state)
-        return [...state, newAnecdote]
+    case 'ADD': {
+      const newAnecdote = {
+        content: action.payload.content,
+        id: uuid4(),
+        votes:0
       }
+      return [...state, newAnecdote]
+    }
     default:
       return state
   }
 }
 
-export default reducer
+export default anecdoteReducer
