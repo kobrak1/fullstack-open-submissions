@@ -8,7 +8,7 @@ const filterSlice = createSlice({
     reducers: {
         // reducer filters the anecdotes with the specific value entered in the input field
         filterAnecdote(state, action) {
-            state = action.payload
+            return action.payload
         }
     }
 })
