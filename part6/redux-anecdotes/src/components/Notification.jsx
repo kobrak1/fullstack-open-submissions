@@ -18,12 +18,14 @@ const Notification = () => {
 
     // style object for a notification
     const style = {
-        width: '30%',
-        border: 'solid',
-        padding: 10,
-        margin: '1rem 0',
+        display: 'flex',
+        minWidth: '30%',
+        minHeight: '1rem',
+        margin: '.5rem 0',
+        padding: '.5rem',
+        border: '1px solid gray',
         borderWidth: 1,
-        display: notification ? 'block' : 'none',
+        visibility: notification ? 'visible' : 'hidden',
     }
 
   return (
