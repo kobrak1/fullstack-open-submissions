@@ -18,6 +18,7 @@ const AnecdoteFilter = () => {
             <input 
                 value={value} 
                 onChange={handleChange} 
+                placeholder="Search..."
             />
         </div>
     )

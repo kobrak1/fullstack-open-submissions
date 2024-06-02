@@ -1,10 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-const initialState = ''
-
 const filterSlice = createSlice({
     name: 'filter',
-    initialState,
+    initialState: '',
     reducers: {
         // reducer filters the anecdotes with the specific value entered in the input field
         filterAnecdote(state, action) {

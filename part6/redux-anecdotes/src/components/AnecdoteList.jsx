@@ -18,23 +18,18 @@ const AnecdoteList = () => {
     const dispatch = useDispatch()
     const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes) // anecdotes sorted by their votes
 
-    // action creators
-    const vote = (id) => {
-        dispatch(voteAnecdote(id))
-    }
-
     return (
         <>
             {sortedAnecdotes.map(anecdote =>
-            <div key={anecdote.id}>
-                <div>
-                    {anecdote.content}
+                <div key={anecdote.id}>
+                    <div>
+                        {anecdote.content}
+                    </div>
+                    <div>
+                        has {anecdote.votes}    
+                        <button onClick={() => dispatch(voteAnecdote(anecdote.id))}>vote</button>
+                    </div>
                 </div>
-                <div>
-                    has {anecdote.votes}
-                    <button onClick={() => vote(anecdote.id)}>vote</button>
-                </div>
-            </div>
             )}
         </>
     )
