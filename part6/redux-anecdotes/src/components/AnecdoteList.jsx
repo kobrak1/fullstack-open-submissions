@@ -2,8 +2,6 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createSelector } from '@reduxjs/toolkit'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
-import { setNotification } from '../reducers/notificationReducer'
-import anecdoteService from '../services/anecdoteService'
 
 const AnecdoteList = () => {
     const dispatch = useDispatch()
@@ -23,16 +21,9 @@ const AnecdoteList = () => {
     // filtered & sorted anecdotes
     const anecdotes = useSelector(filterSelector)
 
-    // function that handles the update of votes in both reducer state and db
-    const handleVote = useCallback(async (id) => {
-        const item = anecdotes.find(e => e.id === id) // find the item to be updated
-
-        if(item) {
-            dispatch(voteAnecdote(id)) // update the state
-            dispatch(setNotification(`${item.content} is voted.`)) // set the notification message
-            
-            await anecdoteService.vote(id, {...item, votes: item.votes + 1}) // update the db
-        }
+    const handleVote = useCallback((id, anecdotes) => {
+        const item = anecdotes.find(e => e.id === id) // find the item to be voted
+        dispatch(voteAnecdote(id, item))
     }, [dispatch, anecdotes])
 
     console.log('anecdotes:', anecdotes)
@@ -45,7 +36,7 @@ const AnecdoteList = () => {
                     </div>
                     <div>
                         has {anecdote.votes}    
-                        <button onClick={() => handleVote(anecdote.id)}>vote</button>
+                        <button onClick={() => handleVote(anecdote.id, anecdotes)}>vote</button>
                     </div>
                 </div>
             )}

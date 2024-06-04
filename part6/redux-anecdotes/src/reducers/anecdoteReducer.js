@@ -1,18 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
-import anecdoteService from '../services/anecdoteService'
 import { setNotification } from './notificationReducer'
+import anecdoteService from '../services/anecdoteService'
 
 const anecdoteSlice = createSlice({
   name: 'anecdotes',
   initialState: [],
   reducers: {
-    // vote a specific anecdote
-    voteAnecdote(state, action) {
-      return state.map(item =>
-        item.id !== action.payload
-          ? item
-          : {...item, votes: item.votes + 1}
-      )
+    setVote(state, action) {
+      const anecdoteIdx = state.findIndex(i => i.id === action.payload.id)
+      state[anecdoteIdx] = action.payload
     },
     appendNote(state, action) {
       state.push(action.payload)
@@ -40,5 +36,14 @@ export const createAnecdote = (content) => {
   }
 }
 
-export const { voteAnecdote, appendNote, setNotes } = anecdoteSlice.actions
+// handle voting an anecdote
+export const voteAnecdote = (id, item) => {
+  return async (dispatch) => {
+    const votedAnecdote = await anecdoteService.vote(id, {...item, votes: item.votes + 1}) // update the db
+    dispatch(setVote(votedAnecdote)) // update the state
+    dispatch(setNotification(`${votedAnecdote.content} is voted.`)) // set the notification message
+  }
+}
+
+export const { appendNote, setNotes, setVote } = anecdoteSlice.actions
 export default anecdoteSlice.reducer
