@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query"
 import { getAll } from "./requests"
+import ErrorComponent from "./components/ErrorComponent"
 
 const App = () => {
-  const { isLoading, data: anecdotes } = useQuery({
+  const { isLoading, isSuccess, data: anecdotes } = useQuery({
     queryKey: ['anecdotes'],
     queryFn: getAll,
     refetchOnWindowFocus: false
@@ -10,6 +11,9 @@ const App = () => {
 
   if(isLoading) {
     return <div>Loading data...</div>
+  }
+  if(isSuccess === false) {
+    return <ErrorComponent />
   }
 
   return (
