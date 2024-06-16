@@ -1,9 +1,41 @@
-import { useQuery } from "@tanstack/react-query"
-import { getAll } from "./requests"
-import ErrorComponent from "./components/ErrorComponent"
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
+import { create, getAll, update } from "./requests"
+import Notification from './components/Notification'
 
 const App = () => {
-  const { isLoading, isSuccess, data: anecdotes } = useQuery({
+  const queryClient = useQueryClient()
+
+  // Mutations
+  const newAnecdoteMutation = useMutation({
+    mutationFn: create,
+    onSuccess: (content) => {
+      const anecdotes = queryClient.getQueryData(['anecdotes'])
+      queryClient.setQueryData(['anecdotes'], anecdotes.concat(content))
+    }
+  })
+
+  const voteAnecdoteMutation = useMutation({
+    mutationFn: update,
+    onSuccess: () => {
+      queryClient.invalidateQueries('anecdotes')
+    }
+  })
+
+  // add a new anecdote
+  const addAnecdote = (event) => {
+    event.preventDefault()
+    const content = event.target.anecdoteInput.value
+    event.target.anecdoteInput.value = ''
+    newAnecdoteMutation.mutate({content, votes: 0})
+  }
+
+  // update an anecdote
+  const voteAnecdote = (content) => {
+    voteAnecdoteMutation.mutate({...content, votes: content.votes + 1})
+  }
+
+  // fetch all data
+  const { isLoading, isError, data: anecdotes } = useQuery({
     queryKey: ['anecdotes'],
     queryFn: getAll,
     refetchOnWindowFocus: false
@@ -12,8 +44,8 @@ const App = () => {
   if(isLoading) {
     return <div>Loading data...</div>
   }
-  if(isSuccess === false) {
-    return <ErrorComponent />
+  if(isError) {
+    return <Notification />
   }
 
   return (
@@ -26,14 +58,16 @@ const App = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button>vote</button>
+            <button onClick={() => voteAnecdote(anecdote)}>vote</button>
           </div>
         </div>
       )}
       <h2>create new</h2>
-      <form>
-        <div><input /></div>
-        <button>create</button>
+      <form onSubmit={addAnecdote}>
+        <div>
+          <input name="anecdoteInput" />
+        </div>
+        <button type="submit">create</button>
       </form>
     </div>
   )
