@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 import { create, getAll, update } from "./requests"
 import Notification from './components/Notification'
+import { useMemo } from "react"
 
 const App = () => {
   const queryClient = useQueryClient()
@@ -41,15 +42,19 @@ const App = () => {
     refetchOnWindowFocus: false
   })
 
+  // anecdotes sorted by their vote number
+  const sortedAnecdotes = useMemo(() =>
+    anecdotes
+      ? [...anecdotes].sort((a, b) => b.votes - a.votes)
+      : []
+  , [anecdotes])
+
   if(isLoading) {
     return <div>Loading data...</div>
   }
   if(isError) {
     return <Notification />
   }
-
-  // anecdotes sorted by their vote number
-  const sortedAnecdotes = anecdotes.sort((a, b) => b.votes - a.votes)
 
   return (
     <div>
