@@ -27,15 +27,15 @@ const AnecdoteForm = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input { ...content } />
+          <input name='content' { ...content } />
         </div>
         <div>
           author
-          <input { ...author } />
+          <input name='author' { ...author } />
         </div>
         <div>
           url for more info
-          <input { ...info } />
+          <input name='info' { ...info } />
         </div>
         <button type="submit">create</button>
         <button type="button" onClick={handleReset}>reset</button>
