@@ -1,7 +1,7 @@
+import { useMemo } from "react"
 import { Link } from "react-router-dom"
 
 const Anecdote = ({ anecdote }) => {
-    console.log(anecdote)
   return (
     <div>
         <h2>Anecdotes</h2>
