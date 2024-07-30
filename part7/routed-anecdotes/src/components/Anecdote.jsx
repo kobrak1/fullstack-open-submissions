@@ -1,8 +1,16 @@
+import { Link } from "react-router-dom"
+
 const Anecdote = ({ anecdote }) => {
+    console.log(anecdote)
   return (
     <div>
         <h2>Anecdotes</h2>
-        <li> {anecdote.content} </li>
+        <ul>
+            <li>{ anecdote.content }</li>
+            <li>{ anecdote.author }</li>
+            <li>{ anecdote.info }</li>
+            <li>{ anecdote.votes }</li>
+        </ul>
     </div>
   )
 }
