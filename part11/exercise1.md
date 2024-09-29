@@ -1,5 +1,7 @@
 1) Some common steps in a CI setup include linting, testing, and building. What are the specific tools for taking care of these steps in the ecosystem of the language you picked?
+1) Some common steps in a CI setup include linting, testing, and building. What are the specific tools for taking care of these steps in the ecosystem of the language you picked?
 
+---
 ---
 
 In a JavaScript/TypeScript ecosystem (assuming that's the language you're working with), typical steps in a CI setup like **linting, testing, and building** can be handled by various specialized tools. Here's a breakdown of common tools used for each task:
