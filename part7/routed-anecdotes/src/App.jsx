@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link, useParams } from 'react-router-dom'
 
 const Menu = () => {
   const padding = {
@@ -7,21 +7,37 @@ const Menu = () => {
   }
   return (
     <div>
-      <Link to='/' style={padding}>anecdotes</Link>
+      <Link to='/anecdotes' style={padding}>anecdotes</Link>
       <Link to='/create' style={padding}>create new</Link>
       <Link to='/about' style={padding}>about</Link>
     </div>
   )
 }
 
-const AnecdoteList = ({ anecdotes }) => (
-  <div>
-    <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
-    </ul>
-  </div>
-)
+const AnecdoteList = ({ anecdotes }) => {
+  const params = useParams()
+  return (
+    <div>
+      <h2>Anecdotes</h2>
+      <ul>
+        {anecdotes.map(anecdote => 
+          <Link key={params.id} to={`/anecdotes/${params.id}`}>
+            <li>{anecdote.content}</li>
+          </Link>
+        )}
+      </ul>
+    </div>
+  )
+}
+
+const Anecdote = ({anecdotes}) => {
+  const params = useParams()
+  const item = anecdotes.find(a => a.id === params.id)
+  console.log('item:', params)
+  return (
+    <li>{item.content}</li>
+  )
+}
 
 const About = () => (
   <div>
@@ -123,12 +139,16 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
+  const pubgPlayers = fetch('https://api.pubg.com/shards/steam/players?filter[playerIds]=account.c0e530e9b7244b358def282782f893af&filter[playerNames]=WackyJacky101').then(response => response.json())
+
   return (
     <div>
       <h1>Software anecdotes</h1>
+      <p>{pubgPlayers}</p>
       <Menu />
       <Routes>
-        <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route path='/anecdotes' element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route path='/anecdotes/:id' element={<Anecdote anecdotes={anecdotes}/>} />
         <Route path='/create' element={<CreateNew addNew={addNew} />} />
         <Route path='/about' element={<About />} />
       </Routes>
