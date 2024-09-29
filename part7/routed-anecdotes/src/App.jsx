@@ -1,4 +1,5 @@
 import { useState } from 'react'
+<<<<<<< HEAD
 import { Routes, Route, Link, useParams } from 'react-router-dom'
 
 const Menu = () => {
@@ -65,40 +66,20 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
+=======
+import { Routes, Route, useMatch } from 'react-router-dom'
+
+import Footer from './components/Footer'
+import Menu from './components/Menu'
+import About from './components/About'
+import AnecdoteForm from './components/AnecdoteForm'
+import AnecdoteList from './components/AnecdoteList'
+import Anecdote from './components/Anecdote'
+>>>>>>> 1a1f81020bfaa2ca5268348f55030d87413cb3f2
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    props.addNew({
-      content,
-      author,
-      info,
-      votes: 0
-    })
-  }
 
-  return (
-    <div>
-      <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
-        </div>
-        <div>
-          author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
-        </div>
-        <div>
-          url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
-        </div>
-        <button>create</button>
-      </form>
-    </div>
-  )
 
-}
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -119,6 +100,11 @@ const App = () => {
   ])
 
   const [notification, setNotification] = useState('')
+  const match = useMatch('/anecdotes/:id')
+
+  const anecdote = match
+    ? anecdotes.find(item => item.id === Number(match.params.id))
+    : null
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
@@ -148,8 +134,13 @@ const App = () => {
       <Menu />
       <Routes>
         <Route path='/anecdotes' element={<AnecdoteList anecdotes={anecdotes} />} />
+<<<<<<< HEAD
         <Route path='/anecdotes/:id' element={<Anecdote anecdotes={anecdotes}/>} />
         <Route path='/create' element={<CreateNew addNew={addNew} />} />
+=======
+        <Route path='/anecdotes/:id' element={<Anecdote anecdote={anecdote} />} />
+        <Route path='/create' element={<AnecdoteForm addNew={addNew} />} />
+>>>>>>> 1a1f81020bfaa2ca5268348f55030d87413cb3f2
         <Route path='/about' element={<About />} />
       </Routes>
       <Footer />
